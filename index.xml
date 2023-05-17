@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Bitgolia</title>
-    <link>http://example.org/</link>
+    <link>https://bitgolia.com/</link>
     <description>Recent content on Bitgolia</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 01 Jan 2023 00:00:00 +0000</lastBuildDate><atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 01 Jan 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://bitgolia.com/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>About</title>
-      <link>http://example.org/about/</link>
+      <link>https://bitgolia.com/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>http://example.org/about/</guid>
+      <guid>https://bitgolia.com/about/</guid>
       <description>About this site This website was created with the Hugo framework and the nostyleplease theme.
 The images used as banners around the site, where created using AI, more specifically, Bing Image Creator powered by DALL-E.
 The prompt was something like this example:
@@ -22,19 +22,19 @@ I always had to do some cleaning up with Gimp but, for the most part, they came 
     
     <item>
       <title>Donate</title>
-      <link>http://example.org/donate/</link>
+      <link>https://bitgolia.com/donate/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>http://example.org/donate/</guid>
+      <guid>https://bitgolia.com/donate/</guid>
       <description>Coming soon &amp;hellip;</description>
     </item>
     
     <item>
       <title>Email</title>
-      <link>http://example.org/email/</link>
+      <link>https://bitgolia.com/email/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>http://example.org/email/</guid>
+      <guid>https://bitgolia.com/email/</guid>
       <description>
 Contact me at &amp;ndash;&amp;gt; msoto @ bitgolia.com
 msoto@bitgolia.com </description>
@@ -42,19 +42,19 @@ msoto@bitgolia.com </description>
     
     <item>
       <title>GPG Keys</title>
-      <link>http://example.org/gpgkeys/</link>
+      <link>https://bitgolia.com/gpgkeys/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>http://example.org/gpgkeys/</guid>
+      <guid>https://bitgolia.com/gpgkeys/</guid>
       <description>I&amp;rsquo;m still working on my mail server configuration so this is coming soon &amp;hellip;</description>
     </item>
     
     <item>
       <title>Topics</title>
-      <link>http://example.org/topics/</link>
+      <link>https://bitgolia.com/topics/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>http://example.org/topics/</guid>
+      <guid>https://bitgolia.com/topics/</guid>
       <description>
 In the future here will be listed the subtopics under each major one.
 Networking Linux/Unix Infosec Electronics Mathematics Physics Chemistry [Top] </description>

@@ -2,48 +2,48 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>http://example.org/mathematics/</loc>
+    <loc>https://bitgolia.com/mathematics/</loc>
     <lastmod>2023-01-21T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://example.org/</loc>
+    <loc>https://bitgolia.com/</loc>
     <lastmod>2023-01-01T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://example.org/all-posts/</loc>
+    <loc>https://bitgolia.com/all-posts/</loc>
     <lastmod>2023-01-01T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://example.org/chemistry/</loc>
+    <loc>https://bitgolia.com/chemistry/</loc>
     <lastmod>2023-01-01T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://example.org/electronics/</loc>
+    <loc>https://bitgolia.com/electronics/</loc>
     <lastmod>2023-01-01T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://example.org/infosec/</loc>
+    <loc>https://bitgolia.com/infosec/</loc>
     <lastmod>2023-01-01T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://example.org/linux-unix/</loc>
+    <loc>https://bitgolia.com/linux-unix/</loc>
     <lastmod>2023-01-01T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://example.org/networking/</loc>
+    <loc>https://bitgolia.com/networking/</loc>
     <lastmod>2023-01-01T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://example.org/physics/</loc>
+    <loc>https://bitgolia.com/physics/</loc>
     <lastmod>2023-01-01T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://example.org/samples/</loc>
+    <loc>https://bitgolia.com/samples/</loc>
     <lastmod>2023-01-01T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>http://example.org/about/</loc>
+    <loc>https://bitgolia.com/about/</loc>
   </url><url>
-    <loc>http://example.org/categories/</loc>
+    <loc>https://bitgolia.com/categories/</loc>
   </url><url>
-    <loc>http://example.org/donate/</loc>
+    <loc>https://bitgolia.com/donate/</loc>
   </url><url>
-    <loc>http://example.org/email/</loc>
+    <loc>https://bitgolia.com/email/</loc>
   </url><url>
-    <loc>http://example.org/gpgkeys/</loc>
+    <loc>https://bitgolia.com/gpgkeys/</loc>
   </url><url>
-    <loc>http://example.org/tags/</loc>
+    <loc>https://bitgolia.com/tags/</loc>
   </url><url>
-    <loc>http://example.org/topics/</loc>
+    <loc>https://bitgolia.com/topics/</loc>
   </url>
 </urlset>
