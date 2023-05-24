@@ -41,5 +41,7 @@
     <loc>https://bitgolia.com/gpgkeys/</loc>
   </url><url>
     <loc>https://bitgolia.com/tags/</loc>
+  </url><url>
+    <loc>https://bitgolia.com/topics/</loc>
   </url>
 </urlset>

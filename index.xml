@@ -40,5 +40,16 @@ msoto@bitgolia.com </description>
       <description>I&amp;rsquo;m still working on my mail server configuration so this is coming soon &amp;hellip;</description>
     </item>
     
+    <item>
+      <title>Topics</title>
+      <link>https://bitgolia.com/topics/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://bitgolia.com/topics/</guid>
+      <description>
+In the future here will be listed the subtopics under each major one.
+Networking Linux/Unix Mathematics [Top] </description>
+    </item>
+    
   </channel>
 </rss>
