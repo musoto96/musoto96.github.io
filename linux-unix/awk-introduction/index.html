@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en-us"><head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+   <meta name="description" content="Many of us know awk only as a command line tool for quickly editing output from a previous command.
+Few are aware that it is a fully fledged programming language. The fact that awk comes already installed on most Linux and Unix systems should be more than enough to highlight the importance of knowing its capabilities.
+It is useful for a system administrator to be able to quickly put together an awk script that formats some input into a report, or to perform some math calculations from a file&rsquo;s contents.">  
+
+  <title>
+    
+      Awk Introduction
+    
+  </title>
+
+
+  
+  <link rel="shortcut icon" type="image/x-icon" href="/icon/bitgolia-icon_32x32.ico" />
+  
+  
+  
+  <link rel="stylesheet" href="/css/main.10776b9b86bf7e3aca232a6c5e4fbdc3baacf45c0cc3a1802995836aa1689368e8fadebd3e46fdc9ad87eab1f834f5bbb28dbb2b23fea73ae3e57c258caef3bd.css" integrity="sha512-EHdrm4a/fjrKIypsXk&#43;9w7qs9FwMw6GAKZWDaqFok2jo&#43;t69Pkb9ya2H6rH4NPW7so27KyP&#43;pzrj5XwljK7zvQ==" />
+  
+</head>
+<body a="auto">
+        <main class="page-content" aria-label="Content">
+            <div class="w">
+<a href="/">Home</a>
+
+
+<article>
+    <p class="post-meta">
+        <time datetime="2023-06-03 15:48:06 -0600 MDT">
+            2023-06-03
+        </time>
+    </p>
+
+    <h1>Awk Introduction</h1>
+
+    
+
+    <p>Many of us know awk only as a command line tool for quickly editing output from a previous command.</p>
+<p>Few are aware that it is a fully fledged programming language. The fact that awk comes already installed on most <strong>Linux</strong> and <strong>Unix</strong> systems should be more than enough to highlight the importance of knowing its capabilities.</p>
+<p>It is useful for a system administrator to be able to quickly put together an awk script that formats some input into a report, or to perform some math calculations from a file&rsquo;s contents.</p>
+<p> </p>
+<p>In this article, we give a brief introduction to the language and an example use case of the awk programming language.</p>
+<hr>
+<h3 id="table-of-contents">Table of contents</h3>
+<ul>
+<li><a href="#table-of-contents">Table of contents</a>
+</li>
+<li><a href="#the-anatomy-of-an-awk-program">The anatomy of an awk program</a>
+</li>
+<li><a href="#running-awk-interactively">Running awk interactively</a>
+</li>
+<li><a href="#running-awk-on-the-command-line">Running awk on the command line</a>
+</li>
+<li><a href="#built-in-variables">Built-In Variables</a>
+</li>
+<li><a href="#arithmetic-functions">Arithmetic functions</a>
+</li>
+<li><a href="#string-functions">String functions</a>
+</li>
+<li><a href="#other-built-in-functions">Other built-in functions</a>
+</li>
+<li><a href="#running-awk-using-a-file-as-input">Running awk using a file as input</a>
+</li>
+<li><a href="#redirecting-output">Redirecting output</a>
+</li>
+<li><a href="#closing-thoughts">Closing thoughts</a>
+</li>
+</ul>
+<hr>
+<h4 id="the-anatomy-of-an-awk-program">The anatomy of an awk program</h4>
+<p>Suppose we have a file <code>prog.awk</code> which is an awk program. An awk program is comprised of the following sections:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/awk
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Here we can define functions</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">function</span> helloWorld<span style="color:#f92672">(){</span>
+</span></span><span style="display:flex;"><span>    print <span style="color:#e6db74">&#34;Hello world!&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>BEGIN<span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># This code is executed only at the start of the program</span>
+</span></span><span style="display:flex;"><span>    myvar<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>/run/<span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># This code is executed on whatever matches the regex /run/</span>
+</span></span><span style="display:flex;"><span>    helloWorld<span style="color:#f92672">()</span>
+</span></span><span style="display:flex;"><span>    print <span style="color:#e6db74">&#34;My var is &#34;</span> myvar
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>END<span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e"># This code is executed only at the end of the program</span>
+</span></span><span style="display:flex;"><span>    print <span style="color:#e6db74">&#34;Goodbye cruel world!&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><p> </p>
+<p><a href="#top">[Top]</a>
+</p>
+<h4 id="running-awk-interactively">Running awk interactively</h4>
+<p>We can run such program in the following way. Note that we are matching for a regular expression that contains the string <code>run</code>, so only then, will the <code>helloWorld</code> function and the <code>print</code> will be called, to exit simply Ctrl+C at any time.</p>
+<pre tabindex="0"><code>msoto$ awk -f prog.awk
+asdf
+hello
+ran
+ron
+
+run
+Hello world!
+My var is 0
+
+I run
+Hello world!
+My var is 0
+
+Program, run!
+Hello world!
+My var is 0
+^C
+msoto$
+</code></pre><p>But wait, you may ask, why did the code inside the <code>END</code> block did not run after I Ctrl+C?</p>
+<p> </p>
+<p>Well, technically, the Ctrl+C is giving an abort signal called <strong>SIGINT</strong>.</p>
+<p>The code inside <code>END</code> block actually runs after the <strong>end of input</strong>. So we need to send an end-of-file signal called <strong>EOF</strong>, to the system with Ctrl+D, in order for this code to run:</p>
+<pre tabindex="0"><code>msoto$ awk -f prog.awk
+asdf
+runn
+Hello world!
+My var is 0
+^D
+Goodbye cruel world!
+msoto$
+</code></pre><p>You may not see the ^D characters being printed, I added them to illustrate when I pressed the keys. Now we see the last piece of code running.</p>
+<p> </p>
+<p><a href="#top">[Top]</a>
+</p>
+<h4 id="running-awk-on-the-command-line">Running awk on the command line</h4>
+<p>Now, not all of the blocks are needed, in fact, the <code>BEGIN</code> and <code>END</code> blocks are completely optional and can be omitted. The regular expression can also be omitted so we can have a much simpler program that fits in a single line.</p>
+<p>For example: <code>{print &quot;Word counter: &quot; NF}</code> is a valid awk program.</p>
+<p>And you do not even need to save it in a file.
+From the command line simply run:</p>
+<pre tabindex="0"><code>msoto$ awk &#39;{print &#34;Word counter: &#34; NF}&#39;
+hello my name is moises
+Word counter: 5
+one twoo
+Word counter: 2
+goodbye
+Word counter: 1
+^C
+</code></pre><p><a href="#top">[Top]</a>
+</p>
+<h4 id="built-in-variables">Built-In Variables</h4>
+<p>In the last example we used <code>NF</code> which is a built-in variable for number of fields, by default, the field separator, given by the built-in variable <code>FS</code> is a space character.</p>
+<p>The last program was using this in order to count words.
+There are several built-in variables:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Description</th>
+<th style="text-align:center">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ARGC</td>
+<td>Number of arguments</td>
+<td style="text-align:center">(none)</td>
+</tr>
+<tr>
+<td>ARGV</td>
+<td>Array of arguments</td>
+<td style="text-align:center">(none)</td>
+</tr>
+<tr>
+<td>FILENAME</td>
+<td>Name of current input file</td>
+<td style="text-align:center">(none)</td>
+</tr>
+<tr>
+<td>FNR</td>
+<td>Record (line)  number in current file</td>
+<td style="text-align:center">(none)</td>
+</tr>
+<tr>
+<td>FS</td>
+<td>Field separator</td>
+<td style="text-align:center">&quot; &quot;</td>
+</tr>
+<tr>
+<td>NF</td>
+<td>Number of fields</td>
+<td style="text-align:center">(none)</td>
+</tr>
+<tr>
+<td>NR</td>
+<td>Number of records (lines) read</td>
+<td style="text-align:center">(none)</td>
+</tr>
+<tr>
+<td>OFMT</td>
+<td>Output format for numbers</td>
+<td style="text-align:center">&ldquo;%.6g&rdquo;</td>
+</tr>
+<tr>
+<td>OFS</td>
+<td>Output field separator</td>
+<td style="text-align:center">&quot; &quot;</td>
+</tr>
+<tr>
+<td>ORS</td>
+<td>Output record (line)  separator</td>
+<td style="text-align:center">&ldquo;\n&rdquo;</td>
+</tr>
+<tr>
+<td>RLENGTH</td>
+<td>Length of string matched by match function</td>
+<td style="text-align:center">(none)</td>
+</tr>
+<tr>
+<td>RS</td>
+<td>Input record (line) separator</td>
+<td style="text-align:center">&ldquo;\n&rdquo;</td>
+</tr>
+<tr>
+<td>RSTART</td>
+<td>Start of string matched by match function</td>
+<td style="text-align:center">(none)</td>
+</tr>
+<tr>
+<td>SUBSTEP</td>
+<td>Subscript separator</td>
+<td style="text-align:center">&ldquo;\034&rdquo;</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#top">[Top]</a>
+</p>
+<h4 id="arithmetic-functions">Arithmetic functions</h4>
+<p>Awk is also good for simple mathematics, the built-in arithmetic functions are the following, to get more detailed information you can read the awk manual in the terminal with <code>man awk</code></p>
+<table>
+<thead>
+<tr>
+<th>Fucntion</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>atan2(y,x)</td>
+<td>Return the arctangent of y/x in radians</td>
+</tr>
+<tr>
+<td>cos(x)</td>
+<td>Return the cosine of x, where x is in radians</td>
+</tr>
+<tr>
+<td>exp(x)</td>
+<td>Return the exponential of x</td>
+</tr>
+<tr>
+<td>int(x)</td>
+<td>Return x truncated to an integer value</td>
+</tr>
+<tr>
+<td>log(x)</td>
+<td>Return the natural logarithm of x</td>
+</tr>
+<tr>
+<td>rand()</td>
+<td>Return a random number n such that 0&lt;=n&lt;1</td>
+</tr>
+<tr>
+<td>sin(x)</td>
+<td>Return the sine of x, where x is in radians</td>
+</tr>
+<tr>
+<td>sqrt(x)</td>
+<td>Return the square root of x</td>
+</tr>
+<tr>
+<td>srand(expr)</td>
+<td>Set the seed for rand to expr, returning previous seed</td>
+</tr>
+</tbody>
+</table>
+<p><a href="#top">[Top]</a>
+</p>
+<h4 id="string-functions">String functions</h4>
+<p>These are only a few of the built-in string functions in awk, you can read the manual to get a full list as well as more detailed descriptions.</p>
+<table>
+<thead>
+<tr>
+<th>Fucntion</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>gsub(r,s)</td>
+<td>Substitute s for r globally in $0</td>
+</tr>
+<tr>
+<td>gsub(r,s,t)</td>
+<td>Substitute s for r globally in t</td>
+</tr>
+<tr>
+<td>index(s,t)</td>
+<td>Return first position of string t in s</td>
+</tr>
+<tr>
+<td>length(s)</td>
+<td>Return number of characters in string s</td>
+</tr>
+<tr>
+<td>match(s,r)</td>
+<td>Test if s contains a substring matched by regex r</td>
+</tr>
+<tr>
+<td>split(s,a)</td>
+<td>Split s into an array a using FS</td>
+</tr>
+<tr>
+<td>split(s,a,fs)</td>
+<td>Split s into an array a using fs as field separator</td>
+</tr>
+<tr>
+<td>sub(r,s)</td>
+<td>Substitute s for the leftmost longest substring r in $0</td>
+</tr>
+<tr>
+<td>sub(r,s,t)</td>
+<td>Substitute s for the leftmost longest substring r in t</td>
+</tr>
+<tr>
+<td>substr(s,p)</td>
+<td>Return suffix of s starting at p</td>
+</tr>
+<tr>
+<td>substr(s,p,n)</td>
+<td>Return suffix of s of length n starting at p</td>
+</tr>
+</tbody>
+</table>
+<h4 id="other-built-in-functions">Other built-in functions</h4>
+<p>Awk includes time, I/O, and bit-operation functions as well, to get more information on these you can check the awk manual page on your terminal.</p>
+<p><a href="#top">[Top]</a>
+</p>
+<h4 id="running-awk-using-a-file-as-input">Running awk using a file as input</h4>
+<p>Suppose we are working with a file <code>addrs.txt</code> containing IP address information. Sometimes these are written in CIDR notation, other times, the range is given, the formatting is also varied, having more or less spaces at certain lines:</p>
+<pre tabindex="0"><code>192.168.1.64/24
+    172.10.1.100/14
+192.168.1.64   - 192.168.1.127  
+ 192.168.0.1/18  
+172.8.0.0      - 172.8.1.255
+172.8.1.127/23
+10.0.0.0/8
+ 10.0.0.0 -  10.255.255.255
+10.0.0.0  - 10.127.255.255
+190.1.0.0-190.64.255.255
+</code></pre><p> </p>
+<p>We will use a small awk program that will convert from CIDR notation to range and, if given a range, it will calculate the CIDR notation, you can find the source code here:
+<a href="https://github.com/musoto96/cidrtr" target="_blank" rel="noopener">cidrtr.awk</a>
+</p>
+<pre tabindex="0"><code>msoto$ awk -f cidrtr.awk addrs.txt
+CIDR               Range
+192.168.1.64/24    192.168.1.0 - 192.168.1.255
+172.10.1.100/14    172.8.0.0 - 172.11.255.255
+192.168.1.64/26    192.168.1.64 - 192.168.1.127
+192.168.0.1/18     192.168.0.0 - 192.168.63.255
+172.8.0.0/23       172.8.0.0 - 172.8.1.255
+172.8.1.127/23     172.8.0.0 - 172.8.1.255
+10.0.0.0/8         10.0.0.0 - 10.255.255.255
+10.0.0.0/8         10.0.0.0 - 10.255.255.255
+10.0.0.0/9         10.0.0.0 - 10.127.255.255
+190.1.0.0/10       190.1.0.0 - 190.64.255.255
+msoto$
+</code></pre><p>That&rsquo;s much better.</p>
+<p><a href="#top">[Top]</a>
+</p>
+<h4 id="redirecting-output">Redirecting output</h4>
+<p>Having this printed to the terminal may not be as useful as having it in a file. If we want, we can redirect the output to a new file</p>
+<pre tabindex="0"><code>msoto$ awk -f cidrtr.awk addrs.txt 1&gt;addrs_nice.txt
+msoto$ cat addrs_nice.txt
+...
+</code></pre><blockquote>
+<p><strong>NB:</strong> You cannot redirect output to the same file you are using as input, trying to do so will actually empty the file.</p>
+</blockquote>
+<h4 id="closing-thoughts">Closing thoughts</h4>
+<p>While probably most of what awk does can be achieved by using a combination of other utility programs like: cut, tr, col, etc. taped together in a shell script, the awk programming language is useful for creating reports using a single tool.</p>
+<p>More so, for more complex tasks, an awk script may be more readable than a skillful combination of the previously mentioned utilities in a shell script.</p>
+<p><a href="#top">[Top]</a>
+</p>
+
+</article>
+
+            </div>
+        </main>
+    </body>
+</html>

@@ -7,5 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 01 Jan 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://bitgolia.com/linux-unix/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Awk Introduction</title>
+      <link>https://bitgolia.com/linux-unix/awk-introduction/</link>
+      <pubDate>Sat, 03 Jun 2023 15:48:06 -0600</pubDate>
+      
+      <guid>https://bitgolia.com/linux-unix/awk-introduction/</guid>
+      <description>Many of us know awk only as a command line tool for quickly editing output from a previous command.
+Few are aware that it is a fully fledged programming language. The fact that awk comes already installed on most Linux and Unix systems should be more than enough to highlight the importance of knowing its capabilities.
+It is useful for a system administrator to be able to quickly put together an awk script that formats some input into a report, or to perform some math calculations from a file&amp;rsquo;s contents.</description>
+    </item>
+    
   </channel>
 </rss>
