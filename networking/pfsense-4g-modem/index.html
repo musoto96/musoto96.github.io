@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en-us"><head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+   <meta name="description" content="Recently, I acquired a computer on which I intend to run a virtualised firewall, for this purpose I installed pfSense this is an operating system based on FreeBSD with plenty of networking capabilities out of the box.
+I also bought a 4G LTE modem card, a Huawei me909-120 along with a SIM card adapter and a wireless card to use as AP, but wi-fi is beyond the scope of this post.">  
+
+  <title>
+    
+      pfSense 4G Modem
+    
+  </title>
+
+
+  
+  <link rel="shortcut icon" type="image/x-icon" href="/icon/bitgolia-icon_32x32.ico" />
+  
+  
+  
+  <link rel="stylesheet" href="/css/main.10776b9b86bf7e3aca232a6c5e4fbdc3baacf45c0cc3a1802995836aa1689368e8fadebd3e46fdc9ad87eab1f834f5bbb28dbb2b23fea73ae3e57c258caef3bd.css" integrity="sha512-EHdrm4a/fjrKIypsXk&#43;9w7qs9FwMw6GAKZWDaqFok2jo&#43;t69Pkb9ya2H6rH4NPW7so27KyP&#43;pzrj5XwljK7zvQ==" />
+  
+</head>
+<body a="auto">
+        <main class="page-content" aria-label="Content">
+            <div class="w">
+<a href="/">Home</a>
+
+
+<article>
+    <p class="post-meta">
+        <time datetime="2023-08-27 11:30:12 -0600 MDT">
+            2023-08-27
+        </time>
+    </p>
+
+    <h1>pfSense 4G Modem</h1>
+
+    
+
+    <p>Recently, I acquired a computer on which I intend to run a virtualised firewall, for this purpose I installed <a href="https://www.pfsense.org/" target="_blank" rel="noopener">pfSense</a>
+ this is an operating system based on <em>FreeBSD</em> with plenty of networking capabilities out of the box.</p>
+<p>I also bought a 4G LTE modem card, a <strong>Huawei me909-120</strong> along with a SIM card adapter and a wireless card to use as AP, but wi-fi is beyond the scope of this post.</p>
+<p>I noticed some strange behaviour on the 4G modem, and after not finding any solutions on <em>pfSense</em> forums, I decided to document the fix on a blog post.</p>
+<p> </p>
+<p>In this article, we describe a problem found with a particular 4G modem card and we detail some steps to troubleshoot and fix it, even if you don&rsquo;t have this exact problem you can still benefit from the steps provided in the troubleshooting section.</p>
+<hr>
+<h3 id="table-of-contents">Table of contents</h3>
+<ul>
+<li><a href="#table-of-contents">Table of contents</a>
+</li>
+<li><a href="#the-problem">The problem</a>
+</li>
+<li><a href="#reviewing-configuration">Reviewing configuration</a>
+</li>
+<li><a href="#troubleshooting">Troubleshooting</a>
+</li>
+<li><a href="#fixing-the-problem">Fixing the problem</a>
+</li>
+<li><a href="#monitoring-uptime">Monitoring uptime</a>
+</li>
+<li><a href="#closing-thoughts">Closing thoughts</a>
+</li>
+</ul>
+<hr>
+<h4 id="the-problem">The problem</h4>
+<p>After configuring <em>Point to Point Protocol</em> (<strong>PPP</strong>)  interface and setting it as the <strong>WAN</strong> interface, the card disconnects and reconnects.
+This can be seen on the <em>pfSense</em> dashboard, under <code>Status &gt; System Logs &gt; System</code></p>
+<pre tabindex="0"><code>ugen0.2: &lt;Huawei Technologies Co., Ltd. HUAWEI Mobile V7R11&gt; at usbus0 (disconnected)
+u3g0: at uhub0, port 6, addr 2 (disconnected)
+u3g0: detached
+ugen0.2: &lt;Huawei Technologies Co., Ltd. HUAWEI Mobile V7R11&gt; at usbus0
+u3g0 on uhub0
+u3g0: &lt;Huawei Mobile Connect - Modem&gt; on usbus0
+u3g0: Found 5 ports. 
+</code></pre><p>As you can see on these kernel messages the card is disconnected from the port and then it is found again.</p>
+<p> </p>
+<p>When this happens the serial port device is linked again with an increment of <strong>1</strong>.</p>
+<p><em>e.g.</em> If originally the serial port was linked to <code>/dev/cuaU0</code> after seeing the previous messages it would now be at <code>/dev/cuaU1</code></p>
+<p>This would result in the following <strong>PPP</strong> message message under <code>Status &gt; System Logs &gt; PPP</code></p>
+<pre tabindex="0"><code>[wan_link0] MODEM: can&#39;t ioctl(TIOCMGET) /dev/cuaU0.0: Device not configured 
+</code></pre><p>Since the interface was configured to look for the modem&rsquo;s serial port under <code>/dev/cuaU0</code>, however, the card is now responding to serial commands under <code>/dev/cuaU1</code>. So one must now reconfigure the interface to use the new serial port.</p>
+<p> </p>
+<p>Most of the time, this happened so fast the modem did not have a chance to even connect to the mobile network, making me think the card was flat out fried. But on a few attempts it managed to stay connected up to 5 or 6 minutes, even getting a public IP address, which gave me hope to look for a solution.</p>
+<p><a href="#top">[Top]</a>
+</p>
+<h4 id="reviewing-configuration">Reviewing configuration</h4>
+<p>The configuration varies depending on the modem model and service provider. Probably the easiest way to know your <em>Access Point Name</em> (<strong>APN</strong>) is to plug the SIM card to your phone and connect to the network. The values should automatically fill in on your phone&rsquo;s mobile network settings and from there you can take note of the values you should use.</p>
+<p>In this case for the <em>Huawei me909-120</em> card, I found in some forums I needed to have the following connection string</p>
+<pre tabindex="0"><code>&amp;F&amp;C1&amp;D2E0S0=0
+</code></pre><p>Under the PPP interface <em>Advanced configuration</em>. This string represents a few serial AT commands to get the card in a working state.</p>
+<p>Aside from this there is nothing more to be done here, only configuring the interface according to <a href="https://docs.netgate.com/pfsense/en/latest/interfaces/ppp.html" target="_blank" rel="noopener">official docs on PPP</a>
+.</p>
+<p><a href="#top">[Top]</a>
+</p>
+<h4 id="troubleshooting">Troubleshooting</h4>
+<ol>
+<li>Check the hardware is detected.
+You can do this with <code>dmesg</code> or with <code>usbconfig</code> you will need access to a shell for this.</li>
+</ol>
+<p>e.g. Using <code>dmesg</code>:</p>
+<pre tabindex="0"><code>root# dmesg | grep -iE &#34;modem|card|huawei&#34;
+ugen0.2: &lt;Huawei Technologies Co., Ltd. HUAWEI Mobile V7R11&gt; at usbus0
+u3g0: &lt;Huawei Mobile Connect - Modem&gt; on usbus0
+</code></pre><p>Dumping device descriptions with <code>usbconfig</code> you may see multiple devices along with your modem:</p>
+<pre tabindex="0"><code>root# usbconfig dump_device_desc
+...
+
+ugen0.2: &lt;Huawei Technologies Co., Ltd. HUAWEI Mobile V7R11&gt; at usbus0, cfg=0 md=HOST spd=HIGH (480Mbps) pwr=ON (2mA)
+
+  bLength = 0x0012
+  bDescriptorType = 0x0001
+  bcdUSB = 0x0200
+  bDeviceClass = 0x0000  &lt;Probed by interface class&gt;
+  bDeviceSubClass = 0x0000
+  bDeviceProtocol = 0x00ff
+  bMaxPacketSize0 = 0x0040
+  idVendor = 0x12d1
+  idProduct = 0x15c1
+  bcdDevice = 0x0102
+  iManufacturer = 0x0001  &lt;Huawei Technologies Co., Ltd.&gt;
+  iProduct = 0x0002  &lt;HUAWEI Mobile V7R11&gt;
+  iSerialNumber = 0x0003  &lt;0123456789ABCDEF&gt;
+  bNumConfigurations = 0x0003
+</code></pre><p> </p>
+<ol start="2">
+<li>Check the modem is responding to serial port</li>
+</ol>
+<p>Send a few <strong>AT</strong> commands to a serial port link, you may have to try different links until you find the one that works, here I send the command <strong>AT</strong> and the modem responded with <strong>OK</strong> then I send <strong>ATCSQ</strong> to check signal and this one returned an error.</p>
+<p>You may not see your commands echoed back to your terminal, so try to type them and hit enter.</p>
+<pre tabindex="0"><code>root# cu -l /dev/cuaU0.3 -s 9600 -h
+Connected
+AT
+OK
+ATCSQ
+ERROR
+</code></pre><p>The fact that I had to use <code>/dev/cuaU0.3</code> doesn&rsquo;t necessarily mean I have to use this link on my interface configuration, in fact I found that my interface only works when I select <code>/dev/cuaU0.0</code>. But like this we can verify if the modem works and responds to serial commands.</p>
+<p>On one particular port this was printed to my terminal, which is related to various signal metrics</p>
+<pre tabindex="0"><code>root# cu -l /dev/cuaU0.2 -s 9600 -h
+Connected
+...
+ATA
+NO CARRIER
+^RSSI: 17
+^HCSQ: &#34;LTE&#34;,42,33,141,20
+^RSSI: 17
+^HCSQ: &#34;LTE&#34;,43,39,146,30
+^RSSI: 16
+^HCSQ: &#34;LTE&#34;,40,34,106,24
+^RSSI: 14
+^HCSQ: &#34;LTE&#34;,36,26,96,16
+^RSSI: 16
+^HCSQ: &#34;LTE&#34;,41,35,91,28
+^RSSI: 15
+^HCSQ: &#34;LTE&#34;,38,30,106,22
+^RSSI: 17
+</code></pre><p><a href="#top">[Top]</a>
+</p>
+<h4 id="fixing-the-problem">Fixing the problem</h4>
+<p>So far the card is correctly recognized and it is accepting AT serial commands, yet it is constantly reconnecting and thus changing serial device link on the <em>pfSense</em> appliance. Since <em>pfSense</em> does not automatically detect the serial device for a modem, we need a way to always set the same serial device for the modem.</p>
+<p>Reading on a forum about a similar problem, people talked about device quirks, maybe this is a better approach for this problem, but the solution proposed here is to create a <strong><em>devd</em> configuration</strong>.</p>
+<p>You can read from <code>man 8 devd</code>, <em>devd</em> is a system daemon that runs in the background and when a device is plugged in, it will perform actions according to <em>devd.conf</em>, you can see how this configuration works by reading <code>man 5 devd.conf</code>.</p>
+<p> </p>
+<p>An example of its use is visible on some user friendly desktop Linux distributions; when you connect a USB storage device, <em>devd</em> will usually have a rule to automatically mount the filesystem somewhere on the system.</p>
+<p> </p>
+<p>We will create a new rule file <code>/etc/devd/modem.rules</code> with this content:</p>
+<pre tabindex="0"><code>attach 0 {
+    device-name &#34;u3g0&#34;;                           # Find this with: dmesg |grep -i &#34;card brand&#34;
+    match &#34;vendor&#34; &#34;0x12d1&#34;;                      # Find this with: usbconfig dump_device_desc
+    match &#34;product&#34; &#34;0x15c1&#34;;                     # Find this with: usbconfig dump_device_desc
+    action &#34;/usr/local/bin/create_links.sh %d&#34;;   # A script we will create to map serial ports
+};
+</code></pre><p>You can find your device name with <code>dmesg</code> as shown before, or with <code>sysctl</code> if you know your card&rsquo;s brand name, or you can simply grep for <strong>usb</strong> and find your card there.</p>
+<pre tabindex="0"><code>root# sysctl -a | grep -i &#34;huawei&#34;
+ugen0.2: &lt;Huawei Technologies Co., Ltd. HUAWEI Mobile V7R11&gt; at usbus0
+u3g0: &lt;Huawei Mobile Connect - Modem&gt; on usbus0
+dev.u3g.0.%desc: Huawei Mobile Connect - Modem 
+</code></pre><p> </p>
+<p>The last line in the <em>modem.rules</em> file specifies the action, in this case, we will run a custom script to map the serial ports.
+Create the script under <code>/usr/local/bin/create_links.sh</code> with this content:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span><span style="color:#75715e">#!/bin/sh
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>device<span style="color:#f92672">=</span>$1
+</span></span><span style="display:flex;"><span>serial_ports<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>ls /dev/$device.*<span style="color:#66d9ef">)</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> port in $serial_ports; <span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>    link_name<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>echo $port | sed <span style="color:#e6db74">&#39;s/.*\.\(.*\)$/\1/&#39;</span><span style="color:#66d9ef">)</span>
+</span></span><span style="display:flex;"><span>    ln -sf $port /dev/cuaU0.$link_name
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">done</span>
+</span></span></code></pre></div><p>And grant the script execution rights</p>
+<pre tabindex="0"><code>chmod u+x /usr/local/bin/create_links.sh
+</code></pre><p><a href="#top">[Top]</a>
+</p>
+<h4 id="monitoring-uptime">Monitoring uptime</h4>
+<p>At this point we can restart the <em>pfSense</em> appliance and verify that the serial device ports are no longer changing, they should always be linked to <code>/dev/cuaU0.*</code></p>
+<p>After configuring <em>devd</em> rules it can be seen that the interface has no problems staying up.</p>
+<p><img src="/img/networking/pfsense-4g-modem/uptime-modem.png" alt="pfSense-dashboard"></p>
+<h4 id="closing-thoughts">Closing thoughts</h4>
+<p>In this post we covered a very specific problem on a 4G modem card. It is not clear if the issue has to do with compatibility, hardware or software, maybe it is related to the modem card&rsquo;s firmware.</p>
+<p>In any case, since the card was properly detected and receiving serial commands it prompted me to search for a simple solution instead of just buying a new card, I must say I did use the help of <a href="chat.openai.com/">ChatGPT-3.5</a>
+ in my troubleshooting and for the creation of the linking script.</p>
+<p><a href="#top">[Top]</a>
+</p>
+
+</article>
+
+            </div>
+        </main>
+    </body>
+</html>

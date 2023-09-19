@@ -8,6 +8,16 @@
     <language>en-us</language>
     <lastBuildDate>Sun, 01 Jan 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://bitgolia.com/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>pfSense 4G Modem</title>
+      <link>https://bitgolia.com/networking/pfsense-4g-modem/</link>
+      <pubDate>Sun, 27 Aug 2023 11:30:12 -0600</pubDate>
+      
+      <guid>https://bitgolia.com/networking/pfsense-4g-modem/</guid>
+      <description>Recently, I acquired a computer on which I intend to run a virtualised firewall, for this purpose I installed pfSense this is an operating system based on FreeBSD with plenty of networking capabilities out of the box.
+I also bought a 4G LTE modem card, a Huawei me909-120 along with a SIM card adapter and a wireless card to use as AP, but wi-fi is beyond the scope of this post.</description>
+    </item>
+    
+    <item>
       <title>Awk Introduction</title>
       <link>https://bitgolia.com/linux-unix/awk-introduction/</link>
       <pubDate>Sat, 03 Jun 2023 15:48:06 -0600</pubDate>
